@@ -1,0 +1,32 @@
+html, body{
+    margin: 10ox;
+    padding: 0px;
+    font-size: 16px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    box-sizing: border-box; /*Tagab et padding ja border ei suurenda elementi*/
+}
+
+a.text:link, a.text:visited {
+    color: blue;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+
+a.text:hover{
+    text-decoration: underline; /* kui on kursor lingil siis on joon teksti all*/
+}
+a.text:active{
+    color: red;
+}
+
+/* Sotsiaalmeedia logod */
+.social-logo {
+    width: 50px; /* Väiksem suurus */
+    height: auto; /* Säilitab proportsioonid */
+    margin: 5px; /* Vahe logo ja teiste elementide vahel */
+    transition: transform 0.2s ease-in-out;
+}
+
+.social-logo:hover {
+    transform: scale(1.1)
+    }
