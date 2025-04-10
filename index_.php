@@ -1,3 +1,17 @@
+<?php
+include("include/settings.php");
+include("include/mysqli.php");
+$db = new Db();
+?>
+
+<?php
+$sql = "SELECT *, DATE_FORMAT(added, '%d.%m.%Y %H:%i:s') AS estonia FROM blog ORDER BY added DESC LIMIT 3";
+$data = $db->dbGetArray($sql);
+//$db->show($data);   //test
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="et">
 <head>
@@ -20,15 +34,19 @@
                     <li class="nav-item"><a class="nav-link" href="index_.php">Avaleht</a></li>
                     <li class="nav-item"><a class="nav-link" href="index_.php?page=blog">Blogi</a></li>
                     <li class="nav-item"><a class="nav-link" href="index_.php?page=contact">Kontakt</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index_.php?page=post_add">Lisa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index_.php?page=post_edit">Muuda</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
+
+
     <div class="container mt-4">
         <?php
             if (isset($_GET['page'])) {
-                $page = $_GET['page'] . ".html";
+                $page = $_GET['page'] . ".php";
 
                 if (file_exists($page)) {
                     include($page);
@@ -43,47 +61,52 @@
                 <div class="container mt-5">
                     <h2 class="text-center mb-4">Hiljutised postitused</h2>
                     <div class="row">
-                        <!-- Postitus 1 -->
-                        <div class="col-md-4">
-                            <div class="card">
-                                <img src="img/bmwf31.jpg" class="card-img-top" alt="Uus bmw">
-                                <div class="card-body">
-                                    <h5 class="card-title">Esimene auto</h5>
-                                    <p class="card-text">Ostsin endale uue auto, kas olen sellega rahul? Autoks on 2018...</p>
-                                    <a href="index_.php?page=post1" class="btn btn-primary">Loe edasi</a>                                
+                        <?php
+                        if($data !== false) {
+                            foreach($data as $key=>$val) {
+                                ?>
+                                <!-- Postitus 1 -->
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <img src="<?php echo $val['photo']?>" class="card-img-top" alt="Uus bmw">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?php echo $val['heading']; ?></h5>
+                                            <p class="card-text"><?php echo $val['preamble']; ?></p>
+                                            <a href="?page=post&sid=<?= $val['id'];?>" class="btn btn-primary">Loe edasi</a>      
+                                            <?php
+                                            $tags = array_map('trim',explode(",", $val['tags'])); //tükelda sildid komast     
+                                            //$db->show($tags); //test
+                                            $links = [];
+                                            foreach($tags as $tag) {
+                                                $safeTag = htmlspecialchars($tag);
+                                                $links[] = "<a href=''>{$safeTag}</a>";  //lisa listi
+                                            }
+                                            $result = implode(", ", $links);
+                                            echo $result; //väljasta tulemus
+                                            ?>                                
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- Postitus 2 -->
-                        <div class="col-md-4">
-                            <div class="card">
-                                <img src="img/bmw2.jpg" class="card-img-top" alt="Tuunisin autot">
-                                <div class="card-body">
-                                    <h5 class="card-title">Remont või upgrade?</h5>
-                                    <p class="card-text">Mida ma kohe remontima pean hakkama?</p>
-                                    <a href="index_.php?page=post2" class="btn btn-primary">Loe edasi</a>                                
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Postitus 3 -->
-                        <div class="col-md-4">
-                            <div class="card">
-                                <img src="img/veljed.jpg" class="card-img-top" alt="Tuunisin autot">
-                                <div class="card-body">
-                                    <h5 class="card-title">Uued veljed?</h5>
-                                    <p class="card-text">BMW Style 403M diilid</p>
-                                    <a href="index_.php?page=post3" class="btn btn-primary">Loe edasi</a>                                
-                                </div>
-                            </div>
-                        </div>
+                                <?php
+                            }
+                        }
+            }
+                            ?>
+
+
+                       
+                        
+
+
                     </div> 
                 </div> 
-        <?php
-            }
-        ?>
-    </div>
-
+                
+                
+                                
+                                
+                                
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <p>&copy; 2025 Minu Blogi. Kõik õigused kaitstud.</p>

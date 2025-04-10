@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="et">
 <head>
-    <meta http-equiv="refresh" content="0; URL='index.php'">
+    <meta http-equiv="refresh" content="0; URL='index_.php'">
     <title>Laadimine...</title>
 </head>
 <body>
